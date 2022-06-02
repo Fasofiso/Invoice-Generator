@@ -7,32 +7,49 @@ const btn2 = document.getElementById("btn2");
 const btn3 = document.getElementById("btn3");
 const task = document.getElementById("task");
 const amount = document.getElementById("amount");
+const total = document.getElementById("total");
+
+let tasks = [];
 
 let totalAmount = 0;
 
-function wash() {
-  const taskToAdd = `<div><span>${washCar.name}</span></div>`;
-  task.innerHTML += taskToAdd;
-  const totalToAdd = `<div><span>$ ${washCar.price}</span></div>`;
-  total.innerHTML += totalToAdd;
-  totalAmount += washCar.price;
-  amount.innerText = `$ ${totalAmount}`;
-}
+const renderList = () => {
+  task.innerHTML = "";
+  total.innerHTML = "";
+  totalAmount = 0;
 
-function mow() {
-  const taskToAdd2 = `<div><span>${mowLawn.name}</span></div>`;
-  task.innerHTML += taskToAdd2;
-  const totalToAdd2 = `<div><span>$ ${mowLawn.price}</span></div>`;
-  total.innerHTML += totalToAdd2;
-  totalAmount += mowLawn.price;
-  amount.innerText = `$ ${totalAmount}`;
-}
+  tasks.forEach((item) => {
+    task.innerHTML += `<div class="task-row"><span>${item.name}</span> <span class="remove-button" onclick="removeItem('${item.name}')">Remove</span></div>`;
+    total.innerHTML += `<div><span>$ ${item.price}</span></div>`;
+    totalAmount += item.price;
+  });
 
-function pull() {
-  const taskToAdd3 = `<div><span>${pullWeeds.name}</span> </div>`;
-  task.innerHTML += taskToAdd3;
-  const totalToAdd3 = `<div><span>$ ${pullWeeds.price}</span></div>`;
-  total.innerHTML += totalToAdd3;
-  totalAmount += pullWeeds.price;
   amount.innerText = `$ ${totalAmount}`;
-}
+};
+
+const addItem = (itemName) => {
+  if (itemName === "car") {
+    tasks.push(washCar);
+    renderList();
+  }
+
+  if (itemName === "lawn" && !tasks.some((item) => item.price === 20)) {
+    tasks.push(mowLawn);
+    renderList();
+  }
+  if (itemName === "weeds" && !tasks.some((item) => item.price === 30)) {
+    tasks.push(pullWeeds);
+    renderList();
+  }
+};
+
+const removeItem = (itemName) => {
+  const newTasks = tasks.filter((item) => item.name !== itemName);
+  tasks = [...newTasks];
+  renderList();
+};
+
+const sendInvoice = () => {
+  tasks = [];
+  renderList();
+};
